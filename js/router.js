@@ -17,11 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
             navigateTo(targetUrl);
         }
     });
+
     // Manejar botón Atrás/Adelante del navegador
     window.addEventListener('popstate', (e) => {
-        // En popstate, la URL ya cambió en el navegador, así que cargamos esa
-        // PERO debemos saber si esa URL "bonita" corresponde a un .html real.
-        // Simulamos la lógica inversa.
         handleRoute(window.location.href);
     });
 
@@ -30,10 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPath.endsWith('index.html')) {
         const cleanPath = currentPath.substring(0, currentPath.lastIndexOf('index.html'));
         history.replaceState(null, '', cleanPath);
-    } else if (currentPath.endsWith('feed.html')) {
-        // Caso especial: feed.html se muestra como 'articles'
-        const cleanPath = currentPath.replace('feed.html', 'articles');
-        history.replaceState(null, '', cleanPath);
+
     } else if (currentPath.endsWith('.html')) {
         const cleanPath = currentPath.slice(0, -5);
         history.replaceState(null, '', cleanPath);
@@ -41,39 +36,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function navigateTo(url) {
-    // 1. Determinar el recurso real (.html) y la URL bonita (sin .html)
-    let fetchUrl = url;
-    let displayUrl = url;
+    // Separa la URL base de los parámetros de consulta
+    // USAR document.baseURI es crítico para soportar subcarpetas (ej: /blog/)
+    const urlObj = new URL(url, document.baseURI);
+    const path = urlObj.pathname;
+    const search = urlObj.search; // ?q=...
 
-    // Lógica para limpiar la URL visualmente
-    if (url.endsWith('index.html')) {
+    // 1. Determinar el recurso real (.html) y la URL bonita (sin .html)
+    let fetchPath = path;
+    let displayPath = path;
+
+    // CORRECCIÓN DE CONFLICTO: 'articles' es una carpeta, así que no podemos tener 'articles.html'.
+    // Mapeamos virtualmente: cuando se pida 'articles', mostramos 'feed.html' internamente.
+    if (path.endsWith('articles.html') || path.endsWith('/articles')) {
+        // Fetch real: feed.html
+        fetchPath = path.replace(/articles(\.html)?$/, 'feed.html');
+        // URL visible: articles
+        displayPath = path.replace(/articles(\.html)?$/, 'articles');
+        // Si veníamos de /articles.html, limpiamos extensión para display
+        if (displayPath.endsWith('.html')) displayPath = displayPath.slice(0, -5);
+    }
+    // Lógica estándar para otros archivos
+    else if (path.endsWith('index.html')) {
         // Si es index.html, quitamos todo el nombre para dejar solo la carpeta raíz /
-        displayUrl = url.substring(0, url.lastIndexOf('index.html'));
-    } else if (url.endsWith('.html')) {
+        displayPath = path.substring(0, path.lastIndexOf('index.html'));
+    } else if (path.endsWith('.html')) {
         // Si es otro archivo .html, solo quitamos la extensión
-        displayUrl = url.slice(0, -5);
+        displayPath = path.slice(0, -5);
     }
 
     // Lógica para buscar el archivo real si la URL es limpia (sin .html)
-    if (!url.endsWith('.html')) {
-        if (url.endsWith('/')) {
-            fetchUrl = url + 'index.html';
+    // PERO no sobreescribir si ya mapeamos fetchPath
+    if (fetchPath === path && !path.endsWith('.html')) {
+        if (path.endsWith('/')) {
+            fetchPath = path + 'index.html';
         } else {
-            fetchUrl = url + '.html';
+            fetchPath = path + '.html';
         }
     }
 
-    // CORRECCIÓN CRÍTICA: Mapeo manual para 'articles' -> 'feed.html'
-    // Esto asegura que el fetch busque el archivo físico real, ya que articles.html no existe.
-    if (fetchUrl.endsWith('articles.html') || fetchUrl.endsWith('/articles')) {
-        fetchUrl = fetchUrl.replace(/articles(\.html)?$/, 'feed.html');
-        // Aseguramos que la URL visual sea 'articles' (sin extensión)
-        if (displayUrl.endsWith('feed.html')) {
-            displayUrl = displayUrl.replace('feed.html', 'articles');
-        } else if (displayUrl.endsWith('articles.html')) {
-            displayUrl = displayUrl.replace('.html', '');
-        }
-    }
+    // Reconstruir URLs con query params
+    const fetchUrl = fetchPath + search;
+    const displayUrl = displayPath + search;
 
     try {
         // Intentar cargar contenido
@@ -91,10 +95,7 @@ async function navigateTo(url) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
 
-        // Reemplazar el contenido actual (Asumiendo estructura <main> o <body>)
-        // Reemplazar todo el body suele ser seguro para mantener scripts en head
-        // PERO cuidado con listeners duplicados. Mejor reemplazar <main> y <title>
-
+        // Reemplazar main
         const newMain = doc.querySelector('main');
         const currentMain = document.querySelector('main');
 
@@ -108,17 +109,12 @@ async function navigateTo(url) {
             // Actualizar URL
             history.pushState(null, '', displayUrl);
 
-            // Si hay scripts específicos en el nuevo body (ej: authors.js call), hay que ejecutarlos
-            // Los <script> dentro de innerHTML/replaceWith NO se ejecutan automágicamente.
+            // Scripts
             executeScripts(newMain);
-
-            // Re-ejecutar scripts necesarios? (ej: highlights, author rendering)
-            // Esto es lo complicado de SPAs vanilla.
-            // Disparamos un evento custom para que otros scripts (como authors.js) se reactiven
             document.dispatchEvent(new Event('DOMContentLoaded'));
 
         } else {
-            // Fallback: recarga dura si la estructura no coincide
+            // Fallback: recarga dura
             window.location.href = displayUrl;
         }
 
@@ -128,13 +124,11 @@ async function navigateTo(url) {
 }
 
 async function load404() {
-    // Buscar la página 404.html (asumiendo que está en la raíz del blog o relativa)
-    // Intentamos rutas relativas comunes y especifica para subcarpeta 'blog'
     const paths = [
         '404.html',
         '../404.html',
         '../../404.html',
-        '/blog/404.html',
+        'blog/404.html',
         '/404.html'
     ];
     let html = '';
@@ -150,34 +144,20 @@ async function load404() {
     }
 
     if (html) {
-        document.body.innerHTML = html; // Reemplazo total para el 404
+        document.body.innerHTML = html;
     } else {
-        document.body.innerHTML = '<h1 style="color:white; text-align:center; margin-top:50px;">404 - Not Found (y falta 404.html)</h1>';
+        document.body.innerHTML = '<h1 style="color:white; text-align:center; margin-top:50px;">404 - Not Found</h1>';
     }
 }
 
-// Helper para ejecutar scripts insertados dinámicamente
+// Helper para ejecutar scripts
 function executeScripts(node) {
     const scripts = node.querySelectorAll('script');
     scripts.forEach(oldScript => {
         const newScript = document.createElement('script');
-        // Copiar atributos
         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-
-        // Si es un inline script, copiar contenido
-        if (oldScript.src) {
-            // Para scripts externos, debemos esperar a que carguen? 
-            // En un mundo ideal si, pero para este caso simple, dejemos que fluyan.
-            // Sin embargo, para evitar ejecuciones duplicadas de scripts globales si estuvieran en body (mala practica pero posible):
-            // Podríamos chequear si ya existe un script con ese src.
-        }
+        if (oldScript.src) { }
         newScript.textContent = oldScript.textContent;
-
-        // Reemplazar
         oldScript.parentNode.replaceChild(newScript, oldScript);
-
-        // Si era un script src, no se ejecuta sincronicamente.
-        // Si dependemos de el, estamos en problemas en SPA vanilla.
-        // Por eso es mejor tener libs en <head>.
     });
 }

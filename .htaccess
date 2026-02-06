@@ -1,25 +1,10 @@
-# Evitar colisión Carpeta vs Archivo y Listado de Directorios
-DirectorySlash Off
-Options -Indexes
+RewriteEngine On
 
-# Base para XAMPP en subcarpeta 'blog'
-RewriteBase /blog/
+# Si el archivo o directorio no existe, intenta agregar .html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
 
-# 0. CASO ESPECIAL: "articles" colisiona con la carpeta "articles/".
-# Solución: Renombramos internamente articles.html a feed.html
-# Si piden /articles (sin ext) -> sirve feed.html
-RewriteRule ^articles/?$ feed.html [L]
-# Si el router pide /articles.html -> sirve feed.html
-RewriteRule ^articles\.html$ feed.html [L]
-
-# 1. Si el archivo o carpeta existe...
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# 2. Si piden algo sin extensión y existe el .html, sírvelo
-RewriteCond %{REQUEST_FILENAME}.html -f
-RewriteRule ^(.*)$ $1.html [L]
-
-# 3. Redirigir errores 404 a la página personalizada (Ajustado para /blog)
-ErrorDocument 404 /blog/404.html
+# Opcional: Forzar HTTPS (si tienes SSL configurado en XAMPP)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
