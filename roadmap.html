@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Roadmap</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="js/config.js"></script>
+    <script src="js/layout.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <!-- Nav -->
+    <div id="layout-header"></div>
+
+    <!-- Mobile Bottom Nav -->
+    <!-- Mobile Bottom Nav -->
+    <div id="layout-mobile-nav"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-[1280px] mx-auto px-6 py-12 flex-1 w-full mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium">
+            <a href="index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary">Roadmap</span>
+        </nav>
+
+        <header class="mb-12">
+            <h2 class="text-4xl font-bold text-slate-900 dark:text-white mb-2">Roadmap de Ciberseguridad (Próximamente -
+                En Construcción)</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl">Edición Home Lab: De Cero a Experto sin
+                pagar nubes costosas. Todo corre en tu PC.</p>
+
+            <div class="mt-8 flex gap-4">
+                <div class="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    <p class="text-sm text-slate-700 dark:text-slate-300">
+                        <strong>Filosofía:</strong> "Todo corre en tu PC". Diseñado para VirtualBox/VMware con Linux y
+                        Windows. Marca las casillas solo cuando entiendas el concepto y hayas hecho la práctica.
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <div class="space-y-8">
+
+            <!-- FASE 1 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">1</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Arquitectura, Redes y Fundamentos</h3>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                1.1 Intro y Conceptos</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">lock</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Mentalidad Hacker</li>
+                            <li>Lab Setup (Kali/VMs)</li>
+                            <li>Networking (IPs, TCP/UDP)</li>
+                            <li>Modelo OSI</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                1.2 Subnetting</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">calculate</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Máscaras y CIDR</li>
+                            <li>Cálculo de Hosts</li>
+                            <li>Clases de IP</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                1.3 Auditoría Física</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">router</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Cables UTP</li>
+                            <li>Switches / VLANs</li>
+                            <li>Auditoría Wifi WPA2/3</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 2 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">2</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Reconocimiento (Recon)</h3>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                2.1 Escaneo de Redes</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">radar</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Nmap Local</li>
+                            <li>TCP Connect vs SYN</li>
+                            <li>Evasión de Firewalls</li>
+                            <li>Scripts NSE</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                2.2 OSINT</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">public</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Google Dorks</li>
+                            <li>FOCA / Metadatos</li>
+                            <li>Subdominios</li>
+                            <li>Wappalyzer</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 3 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">3</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Laboratorios Docker</h3>
+                </div>
+                <div class="grid md:grid-cols-1 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                3.1 Docker Fundamentals</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">deployed_code</span>
+                        </div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Tu "Nube" Local. Despliegue de
+                            contenedores vulnerables.</p>
+                        <ul
+                            class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1 grid md:grid-cols-2">
+                            <li>Contenedor vs VM</li>
+                            <li>Instalación en Kali</li>
+                            <li>Networking interno</li>
+                            <li>Lab: DVWA / JuiceShop</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 4 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">4</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Enumeración de Servicios</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                4.1 Servicios Comunes</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">dns</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>FTP (vsftpd)</li>
+                            <li>SSH Users</li>
+                            <li>SMB (enum4linux)</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                4.2 CMS Locales</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">web</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Setup WordPress Local</li>
+                            <li>WPScan usage</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 5 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">5</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Conceptos de Explotación</h3>
+                </div>
+                <div class="grid md:grid-cols-1 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                5.1 Shells y Payloads</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">terminal</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Reverse Shells (Netcat)</li>
+                            <li>Bind Shells</li>
+                            <li>Metasploit Framework</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 6 -->
+            <div class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">6</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Web Hacking (OWASP)</h3>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                6.1 SQL Injection</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">database</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Manual (UNION)</li>
+                            <li>Blind SQLi</li>
+                            <li>SQLMap</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                6.2 XSS</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">javascript</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Reflected/Stored</li>
+                            <li>Cookie Theft</li>
+                        </ul>
+                    </a>
+                    <a href="#"
+                        class="block p-4 rounded-lg bg-slate-50 dark:bg-[#0f111a] border border-slate-200 dark:border-slate-700/50 hover:border-primary transition-all group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4
+                                class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                6.3 Lógica y Auth</h4>
+                            <span class="material-symbols-outlined text-slate-500 text-sm">lock_open</span>
+                        </div>
+                        <ul class="text-sm text-slate-500 dark:text-slate-400 list-disc list-inside space-y-1">
+                            <li>Brute Force (Hydra)</li>
+                            <li>CSRF / LFI</li>
+                            <li>Command Injection</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+
+            <!-- FASE 7 y MAS... (Adding a placeholder for remaining phases to avoid file too large issues, or can expand if user wants full detail for all 10 phases immediately) -->
+            <div
+                class="bg-white dark:bg-slate-800/30 border border-slate-200 dark:border-slate-800 rounded-xl p-6 opacity-75">
+                <div class="flex items-center gap-3 mb-6">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-700 text-white font-bold text-sm">...</span>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Fases Avanzadas (7-10)</h3>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 mb-4">Escalada de Privilegios, Directorio Activo, Proyectos
+                    Prácticos y Simulación Empresarial.</p>
+                <button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                    Ver Roadmap Completo Próximamente <span
+                        class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Layout.init({ basePath: './' });
+        });
+    </script>
+
+</body>
+
+</html>

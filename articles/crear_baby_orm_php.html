@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Construye tu propio "Baby ORM" en PHP</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/authors.js"></script>
+    <script src="../js/router.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+
+        .prose-custom h2 {
+            border-left: 4px solid #135bec;
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .terminal-window {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background-color: #0f111a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #1a1d26;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .dot-red {
+            background-color: #ef4444;
+        }
+
+        .dot-yellow {
+            background-color: #eab308;
+        }
+
+        .dot-green {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
+        <div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+    </div>
+
+    <div id="layout-header"></div>
+    <div id="layout-mobile-nav"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Layout !== 'undefined') {
+                Layout.init({ basePath: '../' });
+            }
+        });
+    </script>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-12 flex flex-col mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium w-full">
+            <a href="../index.html" class="text-slate-500 hover:text-primary flex items-center gap-1"><span
+                    class="material-symbols-outlined text-sm">home</span> Inicio</a>
+            <span class="text-slate-400">/</span>
+            <a href="../articles.html" class="text-slate-500 hover:text-primary transition-colors">Artículos</a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary capitalize">php</span>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de
+                        Contenidos</h3>
+                    <div class="flex flex-col gap-1">
+                        <a href="#intro"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">info</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Introducción</span>
+                        </a>
+                        <a href="#setup"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">1.
+                                Configuración Inicial</span>
+                        </a>
+                        <a href="#core"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">code</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">2.
+                                El Núcleo (Clase Database)</span>
+                        </a>
+                        <a href="#crud"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">data_object</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">3.
+                                Abstracción CRUD</span>
+                        </a>
+                        <a href="#usage"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">rocket_launch</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">4.
+                                Ejemplo Práctico</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1
+                        class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">
+                        Construye tu propio "Baby ORM" en PHP: Ágil, Seguro y Sin Bloat</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">calendar_today</span> 06 Feb, 2026</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">schedule</span> 20 min</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">person</span> <span
+                                class="author-name-display" data-author-id="1"></span></span>
+                    </div>
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">A veces, frameworks completos como Eloquent o Doctrine son demasiado
+                        pesados para microservicios o scripts de automatización. Hoy aprenderás a crear una capa de
+                        abstracción de base de datos (Baby ORM) profesional, segura y reutilizable utilizando PDO
+                        nativo.</p>
+
+                    <h2 id="setup">1. Configuración Inicial y Dependencias</h2>
+                    <p class="mb-4">Aunque estamos construyendo algo "ligero", no significa "desordenado". Mantendremos
+                        una estructura profesional con <strong>Composer</strong> para el autoloader y configuración
+                        separada.</p>
+
+                    <p>Estructura de archivos recomendada:</p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <pre class="text-sm font-mono text-gray-300">
+/mi-orm-project
+  ├── /app
+  │   ├── /classes
+  │   │   └── Database.php  <-- Nuestro Baby ORM
+  │   └── /config
+  │       └── database.php  <-- Constantes DB
+  ├── composer.json
+  └── index.php
+                        </pre>
+                    </div>
+
+                    <p>Primero, definimos nuestras credenciales en <code>config/database.php</code>:</p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">config/database.php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap"><code>&lt;?php
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', 'secret');
+define('DB_NAME', 'blog_db');
+</code></pre>
+                    </div>
+
+                    <h2 id="core">2. El Núcleo: Clase Database</h2>
+                    <p class="mb-4">La clase <code>Database</code> encapsulará toda la complejidad de PDO. Sus
+                        responsabilidades serán: conectar, preparar consultas (para prevenir SQL Injection) y ejecutar
+                        comandos.</p>
+                    <p>Aquí está la base de nuestra clase, importando PDO y nuestra configuración:</p>
+
+                    <div
+                        class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full h-[300px] overflow-y-auto custom-scrollbar">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">app/classes/Database.php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap"><code>namespace classes;
+
+use PDO;
+use PDOException;
+
+require_once __DIR__ . '/../config/database.php';
+
+class Database {
+    private $host = DB_HOST;
+    private $user = DB_USER;
+    private $pass = DB_PASS;
+    private $dbname = DB_NAME;
+
+    private $dbh;
+    private $stmt;
+    private $error;
+
+    public function __construct() {
+        // DSN (Data Source Name)
+        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
+        $options = array(
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        );
+
+        // Instancia PDO Segura
+        try {
+            $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            echo $this->error;
+        }
+    }
+
+    // Preparar Query
+    public function query($sql) {
+        $this->stmt = $this->dbh->prepare($sql);
+    }
+
+    // Vincular parámetros (Binding)
+    public function bind($param, $value, $type = null) {
+        if (is_null($type)) {
+            switch (true) {
+                case is_int($value):
+                    $type = PDO::PARAM_INT;
+                    break;
+                case is_bool($value):
+                    $type = PDO::PARAM_BOOL;
+                    break;
+                case is_null($value):
+                    $type = PDO::PARAM_NULL;
+                    break;
+                default:
+                    $type = PDO::PARAM_STR;
+            }
+        }
+        $this->stmt->bindValue($param, $value, $type);
+    }
+
+    public function execute() {
+        return $this->stmt->execute();
+    }
+
+    // Obtener array de objetos
+    public function resultSet() {
+        $this->execute();
+        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    
+    public function single() {
+        $this->execute();
+        return $this->stmt->fetch(PDO::FETCH_OBJ);
+    }
+}</code></pre>
+                    </div>
+
+                    <h2 id="crud">3. Magia de Abstracción: Métodos CRUD</h2>
+                    <p class="mb-4">Es aquí donde convertimos nuestra clase en un "ORM". En lugar de escribir
+                        <code>INSERT INTO users...</code> cada vez, creamos un método genérico que construye el SQL
+                        dinámicamente basándose en un array de datos.</p>
+
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-6 mb-3">El Método Insert</h3>
+                    <p>Este método toma el nombre de la tabla y un array asociativo. Convierte las claves en campos y
+                        los valores en parámetros vinculados, garantizando seguridad total contra inyección SQL.</p>
+
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap"><code>public function insert($table, $data) {
+    $keys = array_keys($data);
+    $fields = implode(', ', $keys);
+    // Crea placeholders como :name, :email
+    $placeholders = ':' . implode(', :', $keys);
+
+    $sql = "INSERT INTO {$table} ({$fields}) VALUES ({$placeholders})";
+
+    $this->query($sql);
+
+    foreach ($data as $key => $value) {
+        $this->bind(':' . $key, $value);
+    }
+
+    return $this->execute();
+}</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-6 mb-3">Selección Inteligente (Select
+                        & GetJoin)</h3>
+                    <p>Podemos ir más allá con un generador de consultas SELECT que soporte condiciones, límites y
+                        uniones.</p>
+
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap"><code>public function select($table, $where = [], $limit = null) {
+    $sql = "SELECT * FROM {$table}";
+
+    if (!empty($where)) {
+        $whereParts = [];
+        foreach ($where as $key => $value) {
+            // Sanitización básica de claves
+            $cleanKey = str_replace([' ', '!', '=', '<', '>', '.'], '', $key);
+            $operator = strpos($key, ' ') !== false ? '' : '='; 
+            // Si la clave tiene espacio (ej: "age >"), no añadimos =, sino usamos lo que venga
+            
+            $whereParts[] = "{$key} {$operator} :where_{$cleanKey}";
+        }
+        $sql .= " WHERE " . implode(' AND ', $whereParts);
+    }
+
+    if ($limit) { $sql .= " LIMIT {$limit}"; }
+
+    $this->query($sql);
+
+    // Bind automático
+    foreach ($where as $key => $value) {
+        $cleanKey = str_replace([' ', '!', '=', '<', '>', '.'], '', $key);
+        $this->bind(':where_' . $cleanKey, $value);
+    }
+
+    return $this->resultSet();
+}</code></pre>
+                    </div>
+
+                    <h2 id="usage">4. Ejemplo Práctico: Todo Junto</h2>
+                    <p class="mb-4">Ahora, veamos cómo este Baby ORM simplifica drásticamente nuestro código en un
+                        Controlador o Script.</p>
+
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">index.php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap"><code>use classes\Database;
+
+$db = new Database();
+
+// 1. Crear un usuario
+$newUser = [
+    'username' => 'KevinC',
+    'email' => 'kevin@techsec.com',
+    'role' => 'admin'
+];
+
+if ($db->insert('users', $newUser)) {
+    echo "¡Usuario creado con ID: " . $db->lastInsertId() . "!";
+}
+
+// 2. Buscar usuarios activos
+$users = $db->select('users', ['status' => 'active'], 10);
+
+// 3. Update complejo
+$db->update('users', 
+    ['last_login' => date('Y-m-d H:i:s')], 
+    ['id' => 5]
+);
+</code></pre>
+                    </div>
+
+                    <p
+                        class="mt-8 p-4 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm font-medium">
+                        <span class="font-bold block mb-1">Conclusión</span>
+                        Acabas de crear una capa de acceso a datos que es 100 veces más ligera que Doctrine e
+                        infinitamente más segura que usar <code>mysqli_query</code> directamente. ¡Úsala en tus próximos
+                        scripts, APIs ligeras o herramientas CLI!
+                    </p>
+
+                    <div id="author-card-container"></div>
+                </div>
+            </article>
+        </div>
+    </main>
+    <div id="layout-footer"></div>
+    <script> document.addEventListener('DOMContentLoaded', () => { if (typeof renderAuthorCard === 'function') { renderAuthorCard('1'); } }); </script>
+</body>
+
+</html>

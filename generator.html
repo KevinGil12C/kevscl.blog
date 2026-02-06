@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Generador de Artículos</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="js/config.js"></script>
+    <script src="js/articles_data.js"></script> <!-- Cargar datos existentes para poder actualizarlos -->
+    <script src="js/authors.js"></script>
+    <script src="js/layout.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        textarea {
+            field-sizing: content;
+            min-height: 80px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <!-- Layout Placeholders -->
+    <div id="layout-header"></div>
+    <div id="layout-mobile-nav"></div>
+
+    <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 pt-24">
+
+        <!-- EDITOR COLUMN -->
+        <div class="space-y-6 overflow-y-auto h-screen pr-4 pb-20 custom-scrollbar">
+            <header class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary p-2 rounded-lg"><span
+                            class="material-symbols-outlined text-white">build</span></div>
+                    <div>
+                        <h1 class="text-2xl font-bold">Generador de Artículos</h1>
+                        <p class="text-slate-400 text-xs">Crea contenido estructurado sin tocar HTML.</p>
+                    </div>
+                </div>
+                <!-- Icon Picker Trigger -->
+                <button onclick="document.getElementById('icon-modal').classList.remove('hidden')"
+                    class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-colors">
+                    <span class="material-symbols-outlined text-sm">grid_view</span> Ver Iconos
+                </button>
+            </header>
+
+            <!-- Metadata Section -->
+            <section class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 space-y-4">
+                <h3 class="font-bold text-primary flex items-center gap-2"><span
+                        class="material-symbols-outlined">badge</span> Metadatos</h3>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Título Principal</label>
+                        <input type="text" id="meta-title"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="Ej: Análisis de Vulnerabilidad...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Autor</label>
+                        <select id="meta-author"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm">
+                            <option value="Marcus Thorne">Marcus Thorne</option>
+                            <option value="Alex Rivera">Alex Rivera</option>
+                            <option value="Sarah Chen">Sarah Chen</option>
+                            <option value="Kevin Coyote">Kevin Coyote</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Fecha</label>
+                        <input type="text" id="meta-date"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="Ej: 24 Oct, 2025">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Tiempo de Lectura</label>
+                        <input type="text" id="meta-readtime"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="Ej: 12 min">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Tags (CSV)</label>
+                        <input type="text" id="meta-tags"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="kernel, exploit, cve">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">URL Imagen</label>
+                        <input type="text" id="meta-image"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="https://...">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Resumen (Excerpt)</label>
+                        <textarea id="meta-excerpt"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary px-3 py-2 text-sm"
+                            placeholder="Breve descripción..."></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">ID Archivo (sin .html)</label>
+                        <input type="text" id="meta-id"
+                            class="w-full bg-slate-900 border-slate-700 rounded-lg focus:ring-primary text-primary font-mono px-3 py-2 text-sm"
+                            placeholder="ej: vuln_analysis_v2">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Builder -->
+            <section class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-white flex items-center gap-2"><span
+                            class="material-symbols-outlined text-primary">layers</span> Bloques de Contenido</h3>
+                </div>
+
+                <div id="blocks-container" class="space-y-4 min-h-[100px] p-1">
+                    <!-- Dynamic Blocks will appear here -->
+                </div>
+
+                <!-- Add Block Controls -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-4 border-t border-slate-700">
+                    <button onclick="addBlock('text')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">text_fields</span> Texto</button>
+                    <button onclick="addBlock('attributes')"
+                        class="p-2 bg-blue-900/30 hover:bg-blue-900/50 text-blue-200 rounded-lg text-xs font-medium border border-blue-800 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">list</span> Atributos</button>
+                    <button onclick="addBlock('terminal')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">terminal</span> Terminal</button>
+                    <button onclick="addBlock('code')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">code</span> Código</button>
+                    <button onclick="addBlock('image')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">image</span> Imagen</button>
+                    <button onclick="addBlock('video')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">movie</span> Video</button>
+                    <button onclick="addBlock('file')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">download</span> Archivo</button>
+                    <button onclick="addBlock('alert')"
+                        class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-medium border border-slate-600 flex items-center justify-center gap-1"><span
+                            class="material-symbols-outlined text-sm">warning</span> Alerta</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- PREVIEW / OUTPUT COLUMN -->
+        <div class="h-screen flex flex-col gap-4">
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-700 pb-2">
+                    <h3 class="font-bold text-white">Código Generado</h3>
+                    <button onclick="generateAndDownload()"
+                        class="bg-primary hover:bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">download</span> GENERAR Y DESCARGAR
+                    </button>
+                </div>
+
+                <div class="grid grid-rows-2 gap-4 flex-1 h-full">
+                    <div class="flex flex-col gap-2 relative">
+                        <label class="text-xs font-medium text-slate-400">1. HTML FILE (Se descargará
+                            automáticamente)</label>
+                        <button onclick="copyToClipboard('output-html')"
+                            class="absolute top-0 right-0 text-xs text-primary hover:underline">Copiar
+                            Manualmente</button>
+                        <textarea id="output-html"
+                            class="flex-1 w-full bg-[#0f111a] text-slate-300 font-mono text-xs p-4 rounded-lg border border-slate-700 focus:border-primary focus:ring-0 resize-none custom-scrollbar"
+                            readonly></textarea>
+                    </div>
+                    <div class="flex flex-col gap-2 relative">
+                        <label class="text-xs font-medium text-slate-400">2. ARTICLES_DATA.JS (Se descargará
+                            actualizado)</label>
+                        <button onclick="copyToClipboard('output-json')"
+                            class="absolute top-0 right-0 text-xs text-primary hover:underline">Copiar Solo Bloque
+                            JSON</button>
+                        <textarea id="output-json"
+                            class="flex-1 w-full bg-[#0f111a] text-yellow-300 font-mono text-xs p-4 rounded-lg border border-slate-700 focus:border-primary focus:ring-0 resize-none custom-scrollbar"
+                            readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="layout-footer"></div>
+
+    <!-- ICON MODAL -->
+    <div id="icon-modal"
+        class="fixed inset-0 z-50 bg-black/80 hidden flex items-center justify-center p-6 backdrop-blur-sm">
+        <div
+            class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-3xl max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-lg"><span class="text-primary">Material</span> Icons</h3>
+                <button onclick="document.getElementById('icon-modal').classList.add('hidden')"
+                    class="hover:text-red-400 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="p-4 overflow-y-auto custom-scrollbar">
+                <p class="text-xs text-slate-400 mb-4">Haz clic en un icono para copiar su nombre al portapapeles.</p>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Security Category -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Ciberseguridad</h4>
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                            <button onclick="copyIcon(this)" data-icon="security"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">security</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">security</span></button>
+                            <button onclick="copyIcon(this)" data-icon="bug_report"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">bug_report</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">bug_report</span></button>
+                            <button onclick="copyIcon(this)" data-icon="lock"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">lock</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">lock</span></button>
+                            <button onclick="copyIcon(this)" data-icon="vpn_key"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">vpn_key</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">vpn_key</span></button>
+                            <button onclick="copyIcon(this)" data-icon="shield"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">shield</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">shield</span></button>
+                            <button onclick="copyIcon(this)" data-icon="policy"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">policy</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">policy</span></button>
+                            <button onclick="copyIcon(this)" data-icon="admin_panel_settings"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">admin_panel_settings</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">admin...</span></button>
+                            <button onclick="copyIcon(this)" data-icon="fingerprint"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-primary">fingerprint</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">fingerprint</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Tech Category -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Tecnología</h4>
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                            <button onclick="copyIcon(this)" data-icon="terminal"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">terminal</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">terminal</span></button>
+                            <button onclick="copyIcon(this)" data-icon="code"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">code</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">code</span></button>
+                            <button onclick="copyIcon(this)" data-icon="memory"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">memory</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">memory</span></button>
+                            <button onclick="copyIcon(this)" data-icon="dns"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">dns</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">dns</span></button>
+                            <button onclick="copyIcon(this)" data-icon="language"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">language</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">language</span></button>
+                            <button onclick="copyIcon(this)" data-icon="api"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">api</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">api</span></button>
+                            <button onclick="copyIcon(this)" data-icon="database"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">database</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">database</span></button>
+                            <button onclick="copyIcon(this)" data-icon="settings_ethernet"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-blue-400">settings_ethernet</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">ethernet</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Status Category -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Estado / Avisos</h4>
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                            <button onclick="copyIcon(this)" data-icon="check_circle"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-green-500">check_circle</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">check_circle</span></button>
+                            <button onclick="copyIcon(this)" data-icon="warning"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-yellow-500">warning</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">warning</span></button>
+                            <button onclick="copyIcon(this)" data-icon="error"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-red-500">error</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">error</span></button>
+                            <button onclick="copyIcon(this)" data-icon="info"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-blue-500">info</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">info</span></button>
+                            <button onclick="copyIcon(this)" data-icon="help"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-slate-400">help</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">help</span></button>
+                            <button onclick="copyIcon(this)" data-icon="bolt"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl text-yellow-300">bolt</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">bolt</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Misc Category -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Varios</h4>
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                            <button onclick="copyIcon(this)" data-icon="description"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-white">description</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">file</span></button>
+                            <button onclick="copyIcon(this)" data-icon="link"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-white">link</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">link</span></button>
+                            <button onclick="copyIcon(this)" data-icon="download"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-white">download</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">download</span></button>
+                            <button onclick="copyIcon(this)" data-icon="visibility"
+                                class="p-2 hover:bg-slate-800 rounded flex flex-col items-center gap-1 group"><span
+                                    class="material-symbols-outlined text-2xl group-hover:text-white">visibility</span><span
+                                    class="text-[10px] text-slate-500 truncate w-full text-center">view</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PLANTILLAS PARA BLOQUES (ESTO ESTÁ OCULTO) -->
+    <template id="tpl-block-wrapper">
+        <div
+            class="block-item bg-slate-800/30 border border-slate-700 rounded-lg p-3 hover:border-slate-600 transition-colors relative group">
+            <div
+                class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 flex gap-1 z-10 bg-slate-800 rounded shadow-sm">
+                <button onclick="moveBlock(this, -1)" class="p-1 hover:bg-slate-700 rounded text-slate-400"
+                    title="Subir"><span class="material-symbols-outlined text-xs">arrow_upward</span></button>
+                <button onclick="moveBlock(this, 1)" class="p-1 hover:bg-slate-700 rounded text-slate-400"
+                    title="Bajar"><span class="material-symbols-outlined text-xs">arrow_downward</span></button>
+                <button onclick="deleteBlock(this)" class="p-1 hover:bg-red-900/50 text-red-400 rounded"
+                    title="Eliminar"><span class="material-symbols-outlined text-xs">delete</span></button>
+            </div>
+            <div class="block-content pr-10"></div>
+        </div>
+    </template>
+
+    <script>
+        // --- UTILIDADES ---
+        const blocksContainer = document.getElementById('blocks-container');
+        const tplWrapper = document.getElementById('tpl-block-wrapper');
+
+        // Opciones de colores para mi bloque de atributos
+        const colorOptions = `
+            <option value="text-red-500">Rojo</option>
+            <option value="text-blue-500">Azul</option>
+            <option value="text-green-500">Verde</option>
+            <option value="text-yellow-500">Amarillo</option>
+            <option value="text-purple-500">Morado</option>
+            <option value="text-slate-400">Gris</option>
+            <option value="text-primary">Primary (Azul)</option>
+        `;
+
+        // Función principal para inyectar bloques
+        function addBlock(type) {
+            const wrapper = tplWrapper.content.cloneNode(true).querySelector('div');
+            const contentDiv = wrapper.querySelector('.block-content');
+
+            wrapper.dataset.type = type;
+
+            let html = '';
+
+            if (type === 'text') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">text_fields</span> <span class="text-xs font-bold text-slate-300">TEXTO / HEADER</span></div>
+                    <div class="space-y-2">
+                        <input type="text" class="blk-title w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm mb-1" placeholder="Título de Sección (Opcional - Crea H2)">
+                        <textarea class="blk-content w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm text-slate-300" placeholder="Párrafo..."></textarea>
+                    </div>`;
+            } else if (type === 'attributes') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-blue-400 text-sm">list</span> <span class="text-xs font-bold text-blue-400">LISTA DE ATRIBUTOS</span></div>
+                    <div class="space-y-2 attr-container">
+                        <!-- Rows -->
+                    </div>
+                    <button onclick="addAttrRow(this)" class="mt-2 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 btn-add-attr">+ Agregar Fila</button>
+                    `;
+                // Agrego la primera fila automágicamente para no tener que dar clic
+                // Busco el botón específico dentro de mi bloque recién creado
+                setTimeout(() => {
+                    const btn = contentDiv.querySelector('.btn-add-attr');
+                    if (btn) addAttrRow(btn);
+                }, 50);
+            } else if (type === 'terminal') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">terminal</span> <span class="text-xs font-bold text-slate-300">TERMINAL</span></div>
+                    <div class="space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" class="blk-user flex-1 bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm font-mono text-green-400" placeholder="user@host:~$">
+                            <input type="text" class="blk-cmd flex-[2] bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm font-mono text-white" placeholder="command">
+                        </div>
+                        <textarea class="blk-output w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm font-mono h-24 text-slate-400" placeholder="Output..."></textarea>
+                    </div>`;
+            } else if (type === 'code') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">code</span> <span class="text-xs font-bold text-slate-300">BLOQUE CÓDIGO</span></div>
+                    <div class="space-y-2">
+                         <input type="text" class="blk-lang w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm font-mono" placeholder="Lenguaje (python, js...)">
+                        <textarea class="blk-code w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm font-mono h-24 text-purple-300" placeholder="// Código..."></textarea>
+                    </div>`;
+            } else if (type === 'image' || type === 'video') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">image</span> <span class="text-xs font-bold text-slate-300">MULTIMEDIA (${type.toUpperCase()})</span></div>
+                    <div class="space-y-2">
+                        <input type="text" class="blk-url w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm" placeholder="URL recurso...">
+                        ${type === 'image' ? '<input type="text" class="blk-caption w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm" placeholder="Pie de foto">' : ''}
+                    </div>`;
+            } else if (type === 'file') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">download</span> <span class="text-xs font-bold text-slate-300">ARCHIVO ADJUNTO</span></div>
+                    <div class="space-y-2">
+                        <input type="text" class="blk-filename w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm" placeholder="Nombre (ej: exploit.py)">
+                         <input type="text" class="blk-url w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm" placeholder="URL Descarga">
+                    </div>`;
+            } else if (type === 'alert') {
+                html = `
+                    <div class="mb-1 flex items-center gap-2"><span class="material-symbols-outlined text-slate-500 text-sm">warning</span> <span class="text-xs font-bold text-slate-300">ALERTA / NOTA</span></div>
+                    <div class="space-y-2">
+                        <select class="blk-style w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm">
+                            <option value="info">Azul (Info)</option>
+                            <option value="warning">Amarillo (Warning)</option>
+                            <option value="success">Verde (Success)</option>
+                            <option value="danger">Rojo (Danger)</option>
+                        </select>
+                        <textarea class="blk-content w-full bg-slate-900 border-slate-700 rounded px-2 py-1 text-sm" placeholder="Texto..."></textarea>
+                    </div>`;
+            }
+
+            contentDiv.innerHTML = html;
+            blocksContainer.appendChild(wrapper);
+        }
+
+        // Función auxiliar para las filas de atributos
+        function addAttrRow(btn) {
+            const container = btn.previousElementSibling;
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-4 gap-2 mb-2 attr-row';
+            row.innerHTML = `
+                <input type="text" class="attr-icon bg-slate-900 border-slate-700 rounded px-2 py-1 text-xs" placeholder="Icono (bug_report)">
+                <select class="attr-color bg-slate-900 border-slate-700 rounded px-2 py-1 text-xs">
+                    ${colorOptions}
+                </select>
+                <input type="text" class="attr-label bg-slate-900 border-slate-700 rounded px-2 py-1 text-xs" placeholder="Etiqueta (Tipo)">
+                <input type="text" class="attr-value bg-slate-900 border-slate-700 rounded px-2 py-1 text-xs" placeholder="Valor (RCE)">
+                <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-400"><span class="material-symbols-outlined text-sm">close</span></button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Operaciones para manipular bloques
+        function deleteBlock(btn) { btn.closest('.block-item').remove(); }
+        function moveBlock(btn, dir) {
+            const item = btn.closest('.block-item');
+            if (dir === -1 && item.previousElementSibling) item.parentNode.insertBefore(item, item.previousElementSibling);
+            else if (dir === 1 && item.nextElementSibling) item.parentNode.insertBefore(item.nextElementSibling, item);
+        }
+
+        function copyToClipboard(id) {
+            const el = document.getElementById(id);
+            el.select();
+            document.execCommand('copy');
+            const btn = document.querySelector(`button[onclick="copyToClipboard('${id}')"]`);
+            const original = btn.innerText;
+            btn.innerText = 'Copiado!'; // Feedback visual rápido
+            setTimeout(() => btn.innerText = original, 1000);
+        }
+
+        // Copiar nombre del icono al dar clic en el modal
+        function copyIcon(btn) {
+            const icon = btn.dataset.icon;
+            navigator.clipboard.writeText(icon);
+            // Pequeña animación para confirmar
+            const originalBg = btn.className;
+            btn.classList.add('bg-primary/20');
+            setTimeout(() => btn.classList.remove('bg-primary/20'), 300);
+
+            // Pero, ¿mostrar un toast o alerta?
+        }
+
+        // Helper para descargar archivos
+        function downloadString(text, fileType, fileName) {
+            const blob = new Blob([text], { type: fileType });
+            const a = document.createElement('a');
+            a.download = fileName;
+            a.href = URL.createObjectURL(blob);
+            a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+        }
+
+        // Populate authors from authors.js
+        document.addEventListener('DOMContentLoaded', () => {
+            Layout.init({ basePath: './' });
+
+            if (typeof authorsData !== 'undefined') {
+                const authorSelect = document.getElementById('meta-author');
+                if (authorSelect) {
+                    authorSelect.innerHTML = Object.entries(authorsData).map(([id, author]) =>
+                        `<option value="${id}">${author.name}</option>`
+                    ).join('');
+                }
+            }
+        });
+
+        // --- LÓGICA DEL GENERADOR ---
+        function generateAndDownload() {
+            // Reutilizo la logica de generacion, pero ahora trigger downloads
+            generateCode(true);
+        }
+
+        function generateCode(autoDownload = false) {
+            // 1. RECOLECTAR METADATA
+            // Saco todos los valores de los inputs superiores
+            const meta = {
+                title: document.getElementById('meta-title').value || 'Sin Título',
+                author: document.getElementById('meta-author').value,
+                date: document.getElementById('meta-date').value || 'Fecha',
+                readTime: document.getElementById('meta-readtime').value || '5 min',
+                image: document.getElementById('meta-image').value || '',
+                excerpt: document.getElementById('meta-excerpt').value || '',
+                tags: (document.getElementById('meta-tags').value || '').split(',').map(t => t.trim()),
+                id: document.getElementById('meta-id').value || 'article_' + Date.now()
+            };
+
+            // 2. GENERAR JSON Y ARCHIVO JS ACTUALIZADO
+            const json = {
+                id: meta.id,
+                title: meta.title,
+                excerpt: meta.excerpt,
+                author: meta.author,
+                date: meta.date,
+                readTime: meta.readTime,
+                tags: meta.tags,
+                image: meta.image,
+                url: `articles/${meta.id}.html`
+            };
+
+            // JSON snippet para vista previa
+            document.getElementById('output-json').value = JSON.stringify(json, null, 4) + ",";
+
+            // Lógica de Actualización de Archivo Completo
+            let updatedJsContent = "";
+            if (typeof window.articlesData !== 'undefined' && Array.isArray(window.articlesData)) {
+                // Si ya cargué los datos, prepenedo el nuevo
+                const newList = [json, ...window.articlesData];
+                // Reconstruyo el archivo JS para descargar
+                updatedJsContent = `const articlesData = ${JSON.stringify(newList, null, 4)};\n\n// Hacer estos datos accesibles globalmente para que index.html los consuma\nif (typeof window !== 'undefined') {\n    window.articlesData = articlesData;\n}\n\n// Exportar para entornos Node si alguna vez decido hacer SSR\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = articlesData;\n}`;
+            } else {
+                // Fallback si no cargó
+                updatedJsContent = `const articlesData = ${JSON.stringify([json], null, 4)};`;
+            }
+
+            // 3. GENERAR CONTENIDO BODY & TOC (HTML)
+            let contentHtml = '';
+            let tocHtml = '';
+
+            // Itero cada bloque que agregué
+            document.querySelectorAll('.block-item').forEach((block, idx) => {
+                const type = block.dataset.type;
+
+                // TEXTO
+                if (type === 'text') {
+                    const title = block.querySelector('.blk-title').value;
+                    const text = block.querySelector('.blk-content').value;
+                    if (title) {
+                        const slug = 'sec-' + idx;
+
+                        // Lógica para elegir icono basado en el título
+                        let icon = 'segment'; // Default
+                        const lowerTitle = title.toLowerCase();
+
+                        if (lowerTitle.includes('descrip') || lowerTitle.includes('análisis') || lowerTitle.includes('overview')) icon = 'warning';
+                        else if (lowerTitle.includes('explot') || lowerTitle.includes('exploit') || lowerTitle.includes('ataque')) icon = 'content_cut';
+                        else if (lowerTitle.includes('lab') || lowerTitle.includes('poc') || lowerTitle.includes('terminal') || lowerTitle.includes('prueba')) icon = 'terminal';
+                        else if (lowerTitle.includes('mitig') || lowerTitle.includes('prevención') || lowerTitle.includes('solución')) icon = 'shield';
+                        else if (lowerTitle.includes('conclu') || lowerTitle.includes('resumen')) icon = 'flag';
+                        else if (lowerTitle.includes('intro')) icon = 'info';
+
+                        // Agrego entrada al TOC si hay título
+                        tocHtml += `<a href="#${slug}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">${icon}</span>
+                            <span class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">${title}</span>
+                        </a>`;
+
+                        contentHtml += `<h2 id="${slug}">${title}</h2>`;
+                    }
+                    if (text) contentHtml += `<p class="mb-4">${text}</p>`;
+                }
+
+                // LISTA DE ATRIBUTOS
+                else if (type === 'attributes') {
+                    const rows = block.querySelectorAll('.attr-row');
+                    if (rows.length > 0) {
+                        contentHtml += `<ul class="space-y-3 list-none p-0 my-6">`;
+                        rows.forEach(row => {
+                            const icon = row.querySelector('.attr-icon').value;
+                            const color = row.querySelector('.attr-color').value;
+                            const label = row.querySelector('.attr-label').value;
+                            const val = row.querySelector('.attr-value').value;
+                            contentHtml += `<li class="flex items-start gap-3"><span class="material-symbols-outlined ${color} mt-1">${icon}</span> <div><strong class="text-white">${label}:</strong> <span class="text-slate-400">${val}</span></div></li>`;
+                        });
+                        contentHtml += `</ul>`;
+                    }
+                }
+
+                // TERMINAL
+                else if (type === 'terminal') {
+                    const user = block.querySelector('.blk-user').value;
+                    const command = block.querySelector('.blk-cmd').value;
+                    // Split por enters, quito espacios de cada línea individualmente y uno con <br>
+                    const output = block.querySelector('.blk-output').value.split('\n').map(line => line.trim()).join('<br>');
+
+                    contentHtml += `<div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5"><div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div></div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">bash</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>${user}</span><span class="text-white">${command}</span></div>
+                            <div class="text-gray-400 break-words">${output}</div>
+                        </div>
+                    </div>`;
+                }
+
+                // CODE
+                else if (type === 'code') {
+                    const lang = block.querySelector('.blk-lang').value;
+                    // IMPORTANTE: NO usamos trim() aquí para preservar la indentación del código
+                    // Solo reemplazamos saltos de línea por <br> y escapeamos HTML
+                    const code = block.querySelector('.blk-code').value.replace(/</g, '&lt;').replace(/\n/g, '<br>');
+                    contentHtml += `<div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full"><div class="text-xs text-slate-500 mb-2 font-mono uppercase">${lang}</div><pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words" style="white-space: pre-wrap; word-break: break-word;"><code>${code}</code></pre></div>`;
+                }
+
+                // IMAGE
+                else if (type === 'image') {
+                    const url = block.querySelector('.blk-url').value;
+                    const cap = block.querySelector('.blk-caption').value;
+                    contentHtml += `<figure class="my-8"><img src="${url}" class="rounded-xl border border-slate-700 w-full" alt="Img">${cap ? `<figcaption class="text-center text-xs text-slate-500 mt-2">${cap}</figcaption>` : ''}</figure>`;
+                }
+
+                // VIDEO
+                else if (type === 'video') {
+                    const url = block.querySelector('.blk-url').value;
+                    contentHtml += `<div class="my-8 rounded-xl overflow-hidden border border-slate-700"><video controls class="w-full"><source src="${url}" type="video/mp4">No video support.</video></div>`;
+                }
+
+                // FILE
+                else if (type === 'file') {
+                    const name = block.querySelector('.blk-filename').value;
+                    const url = block.querySelector('.blk-url').value;
+                    contentHtml += `<a href="${url}" class="flex items-center justify-between p-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg group transition-colors my-4" download><div class="flex items-center gap-3"><div class="bg-primary/20 p-2 rounded text-primary"><span class="material-symbols-outlined">description</span></div><div><p class="text-sm font-bold text-white">${name}</p><p class="text-xs text-slate-400">Clic para descargar</p></div></div><span class="material-symbols-outlined text-slate-500 group-hover:text-white transition-colors">download</span></a>`;
+                }
+
+                // ALERT
+                else if (type === 'alert') {
+                    const style = block.querySelector('.blk-style').value;
+                    const txt = block.querySelector('.blk-content').value;
+                    const map = { info: ['blue', 'info'], warning: ['yellow', 'warning'], success: ['green', 'check_circle'], danger: ['red', 'error'] };
+                    const [col, ico] = map[style];
+                    contentHtml += `<div class="bg-${col}-500/10 border-${col}-500/20 text-${col}-500 border rounded-lg p-4 my-4 flex gap-3"><span class="material-symbols-outlined shrink-0">${ico}</span><p class="text-sm">${txt}</p></div>`;
+                }
+            });
+
+            // 4. ARMAR HTML FINAL Y DESCARGAR
+            // Aquí pego todo en la plantilla HTML base
+            const FullHTML = `<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | ${meta.title}</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"><\/script>
+    <script src="../js/config.js"><\/script>
+    <script src="../js/layout.js"><\/script>
+    <script src="../js/authors.js"><\/script>
+    <script>tailwind.config = tailwindConfig;<\/script>
+    <style>
+        /* Estilos base (más complejos movidos a layout.js) */
+        /* Estilos base (más complejos movidos a layout.js) */
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800"><div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 25%"></div></div>
+    
+    <!-- Layout Placeholders -->
+    <div id="layout-header"></div>
+    <div id="layout-mobile-nav"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Layout !== 'undefined') {
+                Layout.init({ basePath: '../' });
+            }
+        });
+    <\/script>
+
+    <!-- Mobile Menu handled by Layout.js -->
+
+    <main class="max-w-[1280px] mx-auto px-6 py-12 flex flex-col mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium w-full">
+            <a href="../index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <a href="../articles.html" class="text-slate-500 hover:text-primary transition-colors">Artículos</a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary capitalize">${meta.tags[0] || 'Artículo'}</span>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar with TOC -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de Contenidos</h3>
+                    <div class="flex flex-col gap-1">${tocHtml}</div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">${meta.title}</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg">calendar_today</span> ${meta.date}</span>
+                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg">schedule</span> ${meta.readTime}</span>
+                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg">person</span> <span class="author-name-display" data-author-id="${meta.author}"></span></span>
+                    </div>
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">${meta.excerpt}</p>
+                    ${contentHtml}
+                    <!-- Author Card -->
+                    <div id="author-card-container"></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                             if (typeof renderAuthorCard === 'function') {
+                                 renderAuthorCard('${meta.author}');
+                             }
+                        });
+                    <\/script>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+</body>
+</html>`;
+
+            document.getElementById('output-html').value = FullHTML;
+
+            // 5. TRIGGER DOWNLOADS (Si fue solicitado)
+            if (autoDownload) {
+                // Descargar HTML
+                const filenameHTML = meta.id ? `${meta.id}.html` : 'articulo.html';
+                downloadString(FullHTML, "text/html", filenameHTML);
+
+                // Descargar JS Actualizado
+                // Aumentamos el delay un poco para asegurar que el navegador procese ambas descargas
+                if (updatedJsContent) {
+                    setTimeout(() => {
+                        downloadString(updatedJsContent, "text/javascript", "articles_data.js");
+                    }, 800);
+                } else {
+                    alert("Error: No se pudo generar el contenido JS actualizado.");
+                }
+
+                // Feedback visual (Toast simulado)
+                const btn = document.querySelector('button[onclick="generateAndDownload()"]');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> ¡DESCARGADOS!';
+                btn.classList.replace('bg-primary', 'bg-green-600');
+                setTimeout(() => {
+                    btn.innerHTML = oldText;
+                    btn.classList.replace('bg-green-600', 'bg-primary');
+                }, 2000);
+            }
+        } // Closing brace for the generateCode function
+    </script>
+</body>
+
+</html>

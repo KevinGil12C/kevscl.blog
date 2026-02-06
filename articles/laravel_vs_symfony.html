@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Laravel vs Symfony: La Batalla Definitiva por el Trono de PHP</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/authors.js"></script>
+    <script src="../js/router.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+
+        .prose-custom h2 {
+            border-left: 4px solid #135bec;
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .terminal-window {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background-color: #0f111a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #1a1d26;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .dot-red {
+            background-color: #ef4444;
+        }
+
+        .dot-yellow {
+            background-color: #eab308;
+        }
+
+        .dot-green {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
+        <div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+    </div>
+
+    <!-- Nav -->
+    <header class="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 glass-nav">
+        <div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <a href="../index.html" class="flex items-center gap-3">
+                    <div class="bg-primary p-1.5 rounded-lg flex items-center justify-center"><span
+                            class="material-symbols-outlined text-white text-xl">security</span></div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">TechSec<span
+                            class="text-primary">.</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="../index.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Inicio</a>
+                    <a href="../articles.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Artículos</a>
+                    <a href="../roadmap.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Roadmap</a>
+                    <a href="../about.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Sobre
+                        Mí</a>
+                    <a href="../contact.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Contacto</a>
+                    <a href="../portfolio.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Portafolio</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block"><span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span><input
+                        class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-primary placeholder:text-slate-500 text-slate-900 dark:text-white outline-none"
+                        placeholder="Buscar..." type="text" /></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-6">
+        <nav class="flex flex-wrap gap-2 py-4 mb-4 text-sm font-medium"><a href="../index.html"
+                class="text-slate-500 hover:text-primary transition-colors">Inicio</a><span
+                class="text-slate-400">/</span><span class="text-slate-900 dark:text-white">php</span></nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar with TOC -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de
+                        Contenidos</h3>
+                    <div class="flex flex-col gap-1">
+                        <a href="#intro"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary"><span
+                                class="material-symbols-outlined text-[20px]">info</span>
+                            <p class="text-sm font-medium">Introducción</p>
+                        </a>
+
+                        <a href="#sec-1"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">warning</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Descripción
+                                Técnica: Filosofías Opuestas</span>
+                        </a><a href="#sec-4"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">content_cut</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Fase
+                                de Explotación: Desarrollo de Rutas</span>
+                        </a><a href="#sec-8"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">shield</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Mitigación:
+                                ¿Cuál Elegir?</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1
+                        class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">
+                        Laravel vs Symfony: La Batalla Definitiva por el Trono de PHP</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">calendar_today</span> 05 Feb 2026</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">schedule</span> 12 min</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">person</span> <span
+                                class="author-name-display" data-author-id="1"></span></span>
+                    </div>
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">Análisis exhaustivo de los dos frameworks más potentes de PHP.
+                        Desglosamos arquitectura, curva de aprendizaje y casos de uso ideales para ayudarte a elegir.
+                    </p>
+                    <h2 id="sec-0">Introducción</h2>
+                    <p class="mb-4">
+                        En el vasto ecosistema de PHP, dos nombres resuenan con más fuerza que el resto:
+                        <strong>Laravel</strong> y <strong>Symfony</strong>. Ambos han transformado la percepción de
+                        PHP, llevándolo de ser un lenguaje de scripting simple a una plataforma robusta para
+                        aplicaciones empresariales.<br><br>
+                        Mientras que Laravel se autodenomina "El Framework para Artesanos Web", priorizando la elegancia
+                        y la velocidad de desarrollo; Symfony se posiciona como un conjunto de componentes reutilizables
+                        de alto rendimiento y el estándar de facto para la estabilidad a largo plazo.
+                    </p>
+                    <h2 id="sec-1">Descripción Técnica: Filosofías Opuestas</h2>
+                    <p class="mb-4">
+                        La principal diferencia no es técnica, sino filosófica. <strong>Laravel</strong> es
+                        "opinionated" (tiene opinión propia); te dice cómo hacer las cosas para que no pierdas tiempo
+                        decidiendo, ofreciendo mucha "magia" pre-construida (Autenticación, Colas, Eloquent
+                        ORM).<br><br>
+                        <strong>Symfony</strong>, por el contrario, es agnóstico y modular. Es como un set de LEGO
+                        avanzado: puedes usar solo el motor de routing, o solo el motor de plantillas (Twig). De hecho,
+                        ¡Laravel utiliza componentes de Symfony en su núcleo!
+                    </p>
+                    <ul class="space-y-3 list-none p-0 my-6">
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-red-500 mt-1">rocket_launch</span>
+                            <div><strong class="text-white">Productividad:</strong> <span
+                                    class="text-slate-400">Velocidad Extrema</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-green-500 mt-1">school</span>
+                            <div><strong class="text-white">Aprendizaje:</strong> <span class="text-slate-400">Curva
+                                    Suave</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-yellow-500 mt-1">database</span>
+                            <div><strong class="text-white">ORM:</strong> <span class="text-slate-400">Eloquent
+                                    (ActiveRecord)</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-purple-500 mt-1">magic_button</span>
+                            <div><strong class="text-white">Estilo:</strong> <span class="text-slate-400">Magia y
+                                    Facilidad</span></div>
+                        </li>
+                    </ul>
+                    <ul class="space-y-3 list-none p-0 my-6">
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-blue-500 mt-1">architecture</span>
+                            <div><strong class="text-white">Arquitectura:</strong> <span class="text-slate-400">Modular
+                                    y Sólida</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-slate-400 mt-1">business</span>
+                            <div><strong class="text-white">Enfoque:</strong> <span class="text-slate-400">Empresarial /
+                                    Enterprise</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-blue-500 mt-1">dataset</span>
+                            <div><strong class="text-white">ORM:</strong> <span class="text-slate-400">Doctrine
+                                    (DataMapper)</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-green-500 mt-1">update</span>
+                            <div><strong class="text-white">Estabilidad:</strong> <span class="text-slate-400">Largo
+                                    Plazo (LTS)</span></div>
+                        </li>
+                    </ul>
+                    <h2 id="sec-4">Fase de Explotación: Desarrollo de Rutas</h2>
+                    <p class="mb-4">
+                        Veamos cómo se define una ruta simple en ambos frameworks. Notarás que Laravel busca la
+                        brevedad, mientras que Symfony busca la definición explícita y estructurada (usando Atributos en
+                        PHP 8+).
+                    </p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>// routes/web.php en Laravel
+// Simple, directo y legible casi como inglés llano.
+
+Route::get('/users/{id}', function ($id) {
+    return User::findOrFail($id);
+});</code></pre>
+                    </div>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>// src/Controller/UserController.php en Symfony
+// Más verboso, pero totalmente desacoplado y explícito.
+
+#[Route('/users/{id}', name: 'user_show', methods: ['GET'])]
+public function show(int $id, UserRepository $users): Response
+{
+    $user = $users->find($id);
+    
+    if (!$user) {
+        throw $this->createNotFoundException('Usuario no encontrado');
+    }
+
+    return $this->json($user);
+}</code></pre>
+                    </div>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">bash</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>dev@server:~$</span><span
+                                    class="text-white">composer create-project laravel/laravel vs
+                                    symfony/skeleton</span></div>
+                            <div class="text-gray-400 break-words">Creating a "laravel/laravel" project at
+                                "./app-laravel"<br>Installing laravel/laravel (v10.2.0)<br>&gt; @php -r
+                                "file_exists('.env') || copy('.env.example', '.env');"<br>&gt; @php artisan
+                                key:generate<br>Application key set successfully.<br><br>Creating a "symfony/skeleton"
+                                project at "./app-symfony"<br>Installing symfony/skeleton (v6.4.0)<br>&gt; composer
+                                dump-autoload<br>[OK] Project ready!</div>
+                        </div>
+                    </div>
+                    <h2 id="sec-8">Mitigación: ¿Cuál Elegir?</h2>
+                    <p class="mb-4">
+                        No hay una bala de plata. <br><br>
+                        Si eres una <strong>Startup</strong> o necesitas validar un MVP (Producto Mínimo Viable) en
+                        tiempo récord, o si tu equipo es pequeño, <strong>Laravel</strong> es sin duda la elección
+                        ganadora. Su ecosistema (Forge, Nova, Vapor) te facilitará la vida.<br><br>
+                        Si estás construyendo un <strong>Sistema Bancario</strong>, una aplicación de alta complejidad
+                        con ciclos de vida de 10 años, o necesitas microservicios estrictos, <strong>Symfony</strong> te
+                        dará la paz mental y la rigidez arquitectónica que necesitas.
+                    </p>
+                    <!-- Author Card -->
+                    <!-- Author Card (Dynamic) -->
+                    <div id="author-card-container"></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            renderAuthorCard('1');
+                        });
+                    </script>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 mt-12 py-12">
+        <div class="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-200 dark:bg-slate-800 p-1 rounded-lg"><span
+                        class="material-symbols-outlined text-primary text-lg">security</span></div><span
+                    class="font-bold text-slate-900 dark:text-white">TechSec Blog</span>
+            </div>
+            <p class="text-slate-500 text-sm">© 2026 TechSec Research Lab. API Generated.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

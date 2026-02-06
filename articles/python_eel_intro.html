@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Python + Eel: Apps de Escritorio Modernas con HTML/JS</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/authors.js"></script>
+    <script src="../js/router.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+
+        .prose-custom h2 {
+            border-left: 4px solid #135bec;
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .terminal-window {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background-color: #0f111a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #1a1d26;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .dot-red {
+            background-color: #ef4444;
+        }
+
+        .dot-yellow {
+            background-color: #eab308;
+        }
+
+        .dot-green {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
+        <div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+    </div>
+
+    <!-- Nav -->
+    <header class="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 glass-nav">
+        <div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <a href="../index.html" class="flex items-center gap-3">
+                    <div class="bg-primary p-1.5 rounded-lg flex items-center justify-center"><span
+                            class="material-symbols-outlined text-white text-xl">security</span></div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">TechSec<span
+                            class="text-primary">.</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="../index.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Inicio</a>
+                    <a href="../articles.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Artículos</a>
+                    <a href="../roadmap.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Roadmap</a>
+                    <a href="../about.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Sobre
+                        Mí</a>
+                    <a href="../contact.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Contacto</a>
+                    <a href="../portfolio.html"
+                        class="text-sm font-medium hover:text-primary transition-colors text-slate-900 dark:text-white">Portafolio</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block"><span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span><input
+                        class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-primary placeholder:text-slate-500 text-slate-900 dark:text-white outline-none"
+                        placeholder="Buscar..." type="text" /></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-6">
+        <nav class="flex flex-wrap gap-2 py-4 mb-4 text-sm font-medium"><a href="../index.html"
+                class="text-slate-500 hover:text-primary transition-colors">Inicio</a><span
+                class="text-slate-400">/</span><span class="text-slate-900 dark:text-white">python</span></nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar with TOC -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de
+                        Contenidos</h3>
+                    <div class="flex flex-col gap-1">
+                        <a href="#intro"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary"><span
+                                class="material-symbols-outlined text-[20px]">info</span>
+                            <p class="text-sm font-medium">Introducción</p>
+                        </a>
+
+                        <!-- Auto-generated Icons based on Titles -->
+                        <a href="#sec-desc"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">warning</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Descripción
+                                Técnica</span>
+                        </a>
+
+                        <a href="#sec-exploit"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">content_cut</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Fase
+                                de Explotación</span>
+                        </a>
+
+                        <a href="#sec-lab"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">terminal</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Laboratorio</span>
+                        </a>
+
+                        <a href="#sec-mitig"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">shield</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Mitigación</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1
+                        class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">
+                        Python + Eel: Apps de Escritorio Modernas con HTML/JS</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">calendar_today</span> 04 Feb 2026</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">schedule</span> 8 min</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">person</span> <span
+                                class="author-name-display" data-author-id="1"></span></span>
+                    </div>
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">Descubre cómo crear aplicaciones de escritorio potentes utilizando el
+                        backend de Python y la flexibilidad de HTML/CSS/JS. Guía rápida para empezar.</p>
+
+                    <h2 id="sec-desc">Descripción Técnica</h2>
+                    <p class="mb-4">Eel es una pequeña biblioteca de Python que permite crear aplicaciones de escritorio
+                        simples tipo Electron, pero mucho más ligeras. Utiliza Python para el backend y
+                        HTML/CSS/JavaScript para el frontend, combinando lo mejor del mundo web con la potencia de
+                        scripting de Python.</p>
+
+                    <ul class="space-y-3 list-none p-0 my-6">
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-yellow-500 mt-1">bolt</span>
+                            <div><strong class="text-white">Velocidad:</strong> <span class="text-slate-400">Desarrollo
+                                    Rápido</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-blue-500 mt-1">api</span>
+                            <div><strong class="text-white">Backend:</strong> <span class="text-slate-400">Integración
+                                    Python Nativa</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-green-500 mt-1">devices</span>
+                            <div><strong class="text-white">Soporte:</strong> <span class="text-slate-400">Windows,
+                                    macOS, Linux</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-purple-500 mt-1">build</span>
+                            <div><strong class="text-white">Uso:</strong> <span class="text-slate-400">Herramientas
+                                    Internas</span></div>
+                        </li>
+                    </ul>
+
+                    <h2 id="sec-exploit">Fase de Explotación</h2>
+                    <!-- Usamos el título que fuerza el icono 'content_cut' -->
+                    <p class="mb-4">Implementar Eel es sorprendentemente sencillo. A diferencia de frameworks complejos,
+                        Eel actúa como un puente directo. Aquí mostramos cómo "explotar" sus capacidades para levantar
+                        una GUI en segundos:</p>
+
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">python</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>import eel
+
+# Inicializamos la carpeta 'web' donde están nuestros archivos HTML/JS
+eel.init('web')
+
+# Exponemos una función de Python a Javascript
+@eel.expose
+def saludar_desde_python(x):
+    return f"Hola desde Python, {x}!"
+
+# Iniciamos la app (asume que existe un index.html en la carpeta web)
+eel.start('index.html', size=(800, 600))</code></pre>
+                    </div>
+
+                    <h2 id="sec-lab">Laboratorio</h2>
+                    <p class="mb-4">Para configurar tu entorno de laboratorio, solo necesitas pip. Observa la salida
+                        típica de instalación:</p>
+
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">bash</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>dev@techsec:~$</span><span
+                                    class="text-white">pip install eel</span></div>
+                            <div class="text-gray-400 whitespace-pre-wrap">Collecting eel <br>Downloading
+                                eel-0.16.0.tar.gz (24 kB) <br>Installing collected packages: eel <br>Successfully
+                                installed eel-0.16.0</div>
+                        </div>
+                    </div>
+
+                    <h2 id="sec-mitig">Mitigación</h2>
+                    <p class="mb-4">La distribución de apps Eel se puede realizar empaquetando todo con PyInstaller. Es
+                        la "mitigación" perfecta contra la dependencia de tener Python instalado en la máquina del
+                        cliente.</p>
+
+                    <div
+                        class="bg-green-500/10 border-green-500/20 text-green-500 border rounded-lg p-4 my-4 flex gap-3">
+                        <span class="material-symbols-outlined shrink-0">check_circle</span>
+                        <p class="text-sm">Eel es una excelente opción si quieres crear GUIs modernas sin salir del
+                            ecosistema web. ¡Ideal para convertir tus scripts de pentesting o análisis en herramientas
+                            visuales profesionales!</p>
+                    </div>
+
+                    <!-- Author Card -->
+                    <div id="author-card-container"></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (typeof renderAuthorCard === 'function') {
+                                renderAuthorCard('1');
+                            }
+                        });
+                    </script>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 mt-12 py-12">
+        <div class="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-200 dark:bg-slate-800 p-1 rounded-lg"><span
+                        class="material-symbols-outlined text-primary text-lg">security</span></div><span
+                    class="font-bold text-slate-900 dark:text-white">TechSec Blog</span>
+            </div>
+            <p class="text-slate-500 text-sm">© 2026 TechSec Research Lab. API Generated.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

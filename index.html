@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Inicio</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="js/config.js"></script>
+    <script src="js/articles_data.js"></script>
+    <script src="js/authors.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/layout.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- Nav -->
+    <!-- Layout Headers -->
+    <div id="layout-header"></div>
+    <div id="layout-mobile-nav"></div>
+
+    <!-- Mobile Bottom Nav -->
+
+
+    <!-- Main Content -->
+    <main class="max-w-[1280px] mx-auto px-6 py-6 mb-20 md:mb-0">
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium">
+            <a href="index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary">Últimos Artículos</span>
+        </nav>
+
+        <div class="flex flex-col gap-8">
+            <div class="space-y-8 w-full">
+                <!-- Featured Article -->
+                <!-- Featured Article -->
+                <div id="featured-article-container">
+                    <!-- Dynamic Featured Content -->
+                </div>
+
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Inteligencia Reciente</h3>
+                    <div class="flex gap-2">
+                        <button id="btn-grid" class="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-primary"><span
+                                class="material-symbols-outlined">grid_view</span></button>
+                        <button id="btn-list"
+                            class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:text-primary text-slate-500 dark:text-slate-400"><span
+                                class="material-symbols-outlined">list</span></button>
+                    </div>
+                </div>
+
+                <!-- Grid de Artículos Recientes -->
+                <!-- Esta grilla se rellena dinámicamente con JS para no tener que editar HTML cada vez -->
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+        <script>
+            const initIndex = () => {
+                if (articlesData && articlesData.length > 0) {
+                    const featured = articlesData[0];
+                    const featuredContainer = document.getElementById('featured-article-container');
+
+                    if (featuredContainer) {
+                        featuredContainer.innerHTML = `
+                        <section onclick="window.location.href='${featured.url}'" class="group relative overflow-hidden rounded-xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 cursor-pointer shadow-sm">
+                            <div class="flex flex-col xl:flex-row">
+                                <div class="w-full xl:w-1/2 h-64 xl:h-auto overflow-hidden">
+                                    <div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('${featured.image}')"></div>
+                                </div>
+                                <div class="flex-1 p-8 flex flex-col justify-center gap-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary uppercase tracking-wider w-fit">Destacado</span>
+                                    <h2 class="text-3xl font-bold leading-tight group-hover:text-primary transition-colors text-slate-900 dark:text-white">${featured.title}</h2>
+                                    <p class="text-slate-500 dark:text-slate-400 text-lg line-clamp-3">${featured.excerpt}</p>
+                                    <div class="flex items-center justify-between mt-4">
+                                        <div class="text-sm">
+                                            <p class="font-bold text-slate-900 dark:text-white">${window.getAuthorName ? window.getAuthorName(featured.author) : featured.author}</p>
+                                            <p class="text-slate-500">${featured.date} • ${featured.readTime}</p>
+                                        </div>
+                                        <button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold transition-all flex items-center gap-2">
+                                            Leer Artículo <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        `;
+                    }
+                }
+
+                const articlesGrid = document.getElementById('articles-grid');
+                if (articlesGrid && typeof articlesData !== 'undefined') {
+                    // Show articles starting from index 1 (skipping featured)
+                    articlesGrid.innerHTML = articlesData.slice(1, 7).map(article => `
+                    <div onclick="window.location.href='${article.url}'" class="bg-white dark:bg-slate-800/30 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col group cursor-pointer transition-all hover:shadow-lg">
+                        <div class="h-48 overflow-hidden card-image-container">
+                            <div class="w-full h-full bg-cover bg-center transition-transform group-hover:scale-105" style="background-image: url('${article.image}')"></div>
+                        </div>
+                        <div class="p-5 flex flex-col flex-1">
+                            <div class="flex gap-2 mb-3">
+                                 ${article.tags.map(tag => `<span class="text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-0.5 rounded">#${tag}</span>`).join('')}
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors text-slate-900 dark:text-white">${article.title}</h4>
+                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">${article.excerpt}</p>
+                            <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                                <span>${window.getAuthorName ? window.getAuthorName(article.author) : article.author} • ${article.readTime}</span>
+                                <button class="text-primary font-bold flex items-center gap-1 hover:underline">LEER MÁS <span class="material-symbols-outlined text-xs">trending_flat</span></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                }
+
+                // ... rest of init logic ...
+                // 2. View Toggle Logic
+                const btnGrid = document.getElementById('btn-grid');
+                const btnList = document.getElementById('btn-list');
+
+                if (btnGrid && btnList && articlesGrid) {
+                    function setActiveButton(activeBtn, inactiveBtn) {
+                        activeBtn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-500', 'dark:text-slate-400');
+                        activeBtn.classList.add('bg-slate-200', 'dark:bg-slate-700', 'text-primary');
+
+                        inactiveBtn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-500', 'dark:text-slate-400');
+                        inactiveBtn.classList.remove('bg-slate-200', 'dark:bg-slate-700', 'text-primary');
+                    }
+
+                    // Remove old listeners to avoid duplicates if re-executed? 
+                    // Ideally we should use named functions for listeners but these are anonymous.
+                    // However, we are replacing the DOM elements (buttons), so old listeners are gone with old elements.
+
+                    btnList.addEventListener('click', () => {
+                        // ... logic ...
+                        articlesGrid.classList.remove('md:grid-cols-2', 'lg:grid-cols-3');
+                        articlesGrid.classList.add('grid-cols-1');
+                        const cards = articlesGrid.querySelectorAll('.group');
+                        cards.forEach(card => {
+                            card.classList.remove('flex-col');
+                            card.classList.add('md:flex-row');
+                            const imgContainer = card.querySelector('.card-image-container');
+                            if (imgContainer) {
+                                imgContainer.classList.remove('h-48', 'w-full');
+                                imgContainer.classList.add('w-full', 'md:w-64', 'h-48', 'md:h-auto', 'shrink-0', 'lg:w-[300px]');
+                            }
+                        });
+                        setActiveButton(btnList, btnGrid);
+                    });
+
+                    btnGrid.addEventListener('click', () => {
+                        articlesGrid.classList.add('md:grid-cols-2', 'lg:grid-cols-3');
+                        articlesGrid.classList.remove('grid-cols-1');
+                        const cards = articlesGrid.querySelectorAll('.group');
+                        cards.forEach(card => {
+                            card.classList.add('flex-col');
+                            card.classList.remove('md:flex-row');
+                            const imgContainer = card.querySelector('.card-image-container');
+                            if (imgContainer) {
+                                imgContainer.classList.add('h-48', 'w-full');
+                                imgContainer.classList.remove('w-full', 'md:w-64', 'h-48', 'md:h-auto', 'shrink-0', 'lg:w-[300px]');
+                            }
+                        });
+                        setActiveButton(btnGrid, btnList);
+                    });
+                }
+            };
+
+            // Execute immediately if DOMContentLoaded already fired, otherwise wait.
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initIndex);
+            } else {
+                initIndex(); // Run immediately for router navigation
+            }
+        </script>
+    </main>
+
+    <!-- Pie de Página -->
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Layout.init({ basePath: './' });
+        });
+    </script>
+</body>
+
+</html>

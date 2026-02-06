@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | 🚀 Guía Maestra: PHP Moderno, Seguro y Escalable (2026)</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/authors.js"></script>
+    <script src="../js/router.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+
+        .prose-custom h2 {
+            border-left: 4px solid #135bec;
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .terminal-window {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background-color: #0f111a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #1a1d26;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .dot-red {
+            background-color: #ef4444;
+        }
+
+        .dot-yellow {
+            background-color: #eab308;
+        }
+
+        .dot-green {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
+        <div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 25%"></div>
+    </div>
+
+    <!-- Layout Placeholders -->
+    <div id="layout-header"></div>
+    <div id="layout-mobile-nav"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Layout !== 'undefined') {
+                Layout.init({ basePath: '../' });
+            }
+        });
+    </script>
+
+    <!-- Mobile Menu handled by Layout.js -->
+
+    <main class="max-w-[1280px] mx-auto px-6 py-12 flex flex-col mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium w-full">
+            <a href="../index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <a href="../articles.html" class="text-slate-500 hover:text-primary transition-colors">Artículos</a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary capitalize">php</span>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar with TOC -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de
+                        Contenidos</h3>
+                    <div class="flex flex-col gap-1"><a href="#sec-0"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">info</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Introducción</span>
+                        </a><a href="#sec-1"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">segment</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">1.
+                                Inicialización y Dependencias (Composer)</span>
+                        </a><a href="#sec-3"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">segment</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">2.
+                                Arquitectura de Carpetas (Security First)</span>
+                        </a><a href="#sec-5"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">segment</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">3.
+                                "Baby ORM" (Base de Datos Ágil)</span>
+                        </a><a href="#sec-7"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">segment</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">4.
+                                Login Seguro con JWT y 2FA</span>
+                        </a><a href="#sec-10"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group">
+                            <span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">segment</span>
+                            <span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">5.
+                                Middleware de Protección</span>
+                        </a></div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1
+                        class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">
+                        🚀 Guía Maestra: PHP Moderno, Seguro y Escalable (2026)</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">calendar_today</span> 06 Feb, 2026</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">schedule</span> 25 mn</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">person</span> <span
+                                class="author-name-display" data-author-id="1"></span></span>
+                    </div>
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">Tutorial paso a paso para construir un backend profesional: Desde
+                        'composer init' hasta autenticación JWT con 2FA y protección de endpoints.</p>
+                    <h2 id="sec-0">Introducción</h2>
+                    <p class="mb-4">Olvidemos el PHP de 2010. Hoy en día, construir un backend profesional no requiere
+                        un framework gigante como Laravel para proyectos medianos. En este artículo, vamos a montar
+                        desde cero una arquitectura limpia, segura y modular utilizando lo mejor del ecosistema moderno.
+                    </p>
+                    <h2 id="sec-1">1. Inicialización y Dependencias (Composer)</h2>
+                    <p class="mb-4">Primero, profesionalizamos la gestión de librerías. Usaremos componentes
+                        desacoplados de Symfony (para HTTP), PHP-JWT (seguridad) y PHP-Dotenv (variables de entorno).
+                        Ejecuta esto en tu terminal:</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">bash</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>dev@server:~/proyecto$</span><span
+                                    class="text-white">composer init && composer require vlucas/phpdotenv
+                                    symfony/http-foundation firebase/php-jwt</span></div>
+                            <div class="text-gray-400 break-words">Generating autoload files...<br>> composer
+                                install<br>Installing vlucas/phpdotenv (v5.6.0)<br>Installing symfony/http-foundation
+                                (v6.4.0)<br>Installing firebase/php-jwt (v6.10.0)<br>[OK] Dependencies installed.
+                                Autoload generated.<br></div>
+                        </div>
+                    </div>
+                    <h2 id="sec-3">2. Arquitectura de Carpetas (Security First)</h2>
+                    <p class="mb-4">El error más común es exponer el código fuente. Configura tu servidor para que
+                        'public/' sea la única carpeta accesible. Así, si el servidor falla al procesar PHP, nadie podrá
+                        descargar tu '.env' o código fuente.</p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">bash</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>/mi-proyecto<br>├── /.env              &lt;-- VARIABLES SECRETAS (DB_PASS, JWT_KEY)<br>├── /app<br>│   ├── /Config        &lt;-- Database.php, AppConfig.php<br>│   ├── /Controllers   &lt;-- AuthController.php, UserController.php<br>│   ├── /Middleware    &lt;-- JwtMiddleware.php (Protección de rutas)<br>│   └── /Services      &lt;-- Lógica pesada (EmailService, 2FAService)<br>├── /public<br>│   └── index.php      &lt;-- ENTRY POINT (Único archivo expuesto)<br>├── /vendor            &lt;-- Librerías Composer<br>└── composer.json<br></code></pre>
+                    </div>
+                    <h2 id="sec-5">3. "Baby ORM" (Base de Datos Ágil)</h2>
+                    <p class="mb-4">No necesitamos un ORM pesado como Doctrine para todo. He creado una clase 'DB'
+                        simple que usa PDO Singleton para la conexión y métodos helper para evitar escribir SQL
+                        repetitivo. Nótese el uso de prepared statements forzosos.</p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>class DB {<br>    private static $instance = null;<br>    private $pdo;<br><br>    // Patrón Singleton<br>    public static function get() {<br>        if (self::$instance === null) {<br>            $dsn = "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME'];<br>            self::$instance = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);<br>            self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<br>        }<br>        return self::$instance;<br>    }<br><br>    // Helper seguro para SELECT<br>    public function query($sql, $params = []) {<br>        $stmt = $this->pdo->prepare($sql);<br>        $stmt->execute($params);<br>        return $stmt->fetchAll(PDO::FETCH_ASSOC);<br>    }<br>}<br></code></pre>
+                    </div>
+                    <h2 id="sec-7">4. Login Seguro con JWT y 2FA</h2>
+                    <p class="mb-4">Implementamos un flujo de autenticación moderno. El usuario envía credenciales, y si
+                        son correctas (y pasa el 2FA), retornamos un token JWT firmado.</p>
+                    <ul class="space-y-3 list-none p-0 my-6">
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-yellow-500 mt-1">vpn_key</span>
+                            <div><strong class="text-white">Header:</strong> <span class="text-slate-400">Algoritmo
+                                    (HS256) y Tipo (JWT)</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-blue-500 mt-1">data_object </span>
+                            <div><strong class="text-white">Payload:</strong> <span class="text-slate-400">Datos del
+                                    usuario (ID, Role, Expiración)</span></div>
+                        </li>
+                        <li class="flex items-start gap-3"><span
+                                class="material-symbols-outlined text-green-500 mt-1">verified</span>
+                            <div><strong class="text-white">Signature :</strong> <span class="text-slate-400">Hash único
+                                    generado con tu SECRET_KEY</span></div>
+                        </li>
+                    </ul>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>use Firebase\JWT\JWT;<br>use Symfony\Component\HttpFoundation\Request;<br>public function login(Request $request) {<br>    // 1. Sanitizar entrada<br>    $email = filter_var($request->request->get('email'), FILTER_SANITIZE_EMAIL);<br>    $pass  = $request->request->get('password');<br>    // 2. Verificar usuario en DB (Usando nuestro Baby ORM)<br>    $user = DB::get()->query("SELECT * FROM users WHERE email = ?", [$email])[0] ?? null;<br>    if (!$user || !password_verify($pass, $user['password_hash'])) {<br>        return json_encode(['error' => 'Credenciales inválidas']);<br>    }<br>    // 3. Generar JWT<br>    $payload = [<br>        'iss' => 'mi-api.com',<br>        'iat' => time(),<br>        'exp' => time() + (60 * 60), // 1 Hora<br>        'uid' => $user['id'],<br>        'role' => $user['role']<br>    ];<br>    <br>    $jwt = JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');<br>    return json_encode(['token' => $jwt]);<br>}</code></pre>
+                    </div>
+                    <h2 id="sec-10">5. Middleware de Protección</h2>
+                    <p class="mb-4">Finalmente, protegemos las rutas. Este Middleware intercepta cada petición, busca el
+                        'Authorization: Bearer <token>', lo decodifica y valida. Si expira o es falso, lanza 401
+                            Unauthorized.</p>
+                    <div class="bg-[#1e1e1e] rounded-lg p-4 border border-slate-700 my-4 w-full">
+                        <div class="text-xs text-slate-500 mb-2 font-mono uppercase">php</div>
+                        <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap break-words"
+                            style="white-space: pre-wrap; word-break: break-word;"><code>public function checkAuth() {<br>    $headers = apache_request_headers();<br>    if (!isset($headers['Authorization'])) {<br>        header('HTTP/1.0 401 Unauthorized');<br>        exit('Token no proporcionado');<br>    }<br>    $token = str_replace('Bearer ', '', $headers['Authorization']);<br>    try {<br>        // Decodificar y validar firma automáticamente<br>        $decoded = JWT::decode($token, new Key($_ENV['JWT_SECRET'], 'HS256'));<br>        // Inyectar usuario en sesión global para usarlo en controladores<br>        $_SESSION['user_id'] = $decoded->uid;<br>    } catch (Exception $e) {<br>        header('HTTP/1.0 401 Unauthorized');<br>        exit('Token inválido o expirado');<br>    }<br>}</code></pre>
+                    </div>
+                    <div
+                        class="bg-green-500/10 border-green-500/20 text-green-500 border rounded-lg p-4 my-4 flex gap-3">
+                        <span class="material-symbols-outlined shrink-0">check_circle</span>
+                        <p class="text-sm">¡Listo! Tienes una arquitectura profesional. Con esto tienes inyección de
+                            dependencias (Composer), seguridad DB (PDO/Prepared), seguridad Auth (JWT+Argon2) y
+                            protección de rutas.
+                        </p>
+                    </div>
+                    <!-- Author Card -->
+                    <!-- Author Card -->
+                    <div id="author-card-container"></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (typeof renderAuthorCard === 'function') {
+                                renderAuthorCard('1');
+                            }
+                        });
+                    </script>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+</body>
+
+</html>

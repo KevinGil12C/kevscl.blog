@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | Portafolio</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="js/config.js"></script>
+    <script src="js/layout.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+
+
+    <!-- Nav -->
+    <div id="layout-header"></div>
+
+    <!-- Mobile Bottom Nav -->
+    <div id="layout-mobile-nav"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-[1280px] mx-auto px-6 py-12 flex flex-col items-center justify-center text-center mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav
+            class="absolute top-24 left-6 md:static md:top-auto md:left-auto md:w-full md:text-left flex items-center gap-2 mb-8 text-sm font-medium">
+            <a href="index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary">Portafolio</span>
+        </nav>
+        <div class="p-4 rounded-full bg-primary/10 text-primary mb-6">
+            <span class="material-symbols-outlined text-4xl">travel_explore</span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Redirigiendo a Portafolio...</h2>
+        <p class="text-slate-500 dark:text-slate-400 max-w-lg mb-8 text-lg">
+            Estás siendo redirigido a mi sitio de portafolio principal donde muestro mis proyectos de desarrollo y
+            auditorías.
+        </p>
+
+        <script>
+            // Simulate redirection or real redirection if URL provided
+            setTimeout(() => {
+                // Change this to your actual portfolio URL
+                window.location.href = 'https://kevscl-dev.vercel.app/';
+                window.location.target = "_blank";
+
+                // For now, let's just show a button since we don't have the URL
+                document.getElementById('manual-btn').classList.remove('hidden');
+                document.getElementById('status-text').textContent = "Si no eres redirigido, haz clic abajo.";
+            }, 2000);
+        </script>
+
+        <p id="status-text" class="text-sm text-slate-500 animate-pulse">Conectando con el servidor...</p>
+
+        <a id="manual-btn" href="#"
+            class="hidden mt-6 px-8 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-lg transition-all flex items-center gap-2">
+            Ir al Portafolio
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+
+        <!-- Placeholder Projects Grid (Optional, if they want content instead of redirect) -->
+        <div class="mt-20 w-full grid md:grid-cols-3 gap-6 opacity-50 blur-sm select-none pointer-events-none">
+            <div class="bg-gray-800 h-64 rounded-xl"></div>
+            <div class="bg-gray-800 h-64 rounded-xl"></div>
+            <div class="bg-gray-800 h-64 rounded-xl"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Layout.init({ basePath: './' });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSec | 7 Comandos de Red Vitales para todo Ingeniero de Sistemas</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/authors.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/layout.js"></script>
+    <script>tailwind.config = tailwindConfig;</script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(16, 22, 34, 0.8);
+        }
+
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b4354;
+            border-radius: 10px;
+        }
+
+        .prose-custom h2 {
+            border-left: 4px solid #135bec;
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .terminal-window {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background-color: #0f111a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #1a1d26;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .dot-red {
+            background-color: #ef4444;
+        }
+
+        .dot-yellow {
+            background-color: #eab308;
+        }
+
+        .dot-green {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
+        <div class="h-full bg-primary transition-all duration-300" id="progress-bar" style="width: 15%"></div>
+    </div>
+
+    <!-- Nav -->
+    <!-- Nav -->
+    <div id="layout-header"></div>
+
+    <!-- Mobile Bottom Nav -->
+    <!-- Mobile Bottom Nav -->
+    <div id="layout-mobile-nav"></div>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-6 mb-20 md:mb-0">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 mb-8 text-sm font-medium">
+            <a href="../index.html" class="text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Inicio
+            </a>
+            <span class="text-slate-400">/</span>
+            <a href="../articles.html" class="text-slate-500 hover:text-primary transition-colors">Artículos</a>
+            <span class="text-slate-400">/</span>
+            <span class="text-primary capitalize">Networking</span>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Sidebar with TOC -->
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-4">
+                    <h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider mb-2">Tabla de
+                        Contenidos</h3>
+                    <div class="flex flex-col gap-1">
+                        <a href="#intro"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary"><span
+                                class="material-symbols-outlined text-[20px]">info</span>
+                            <p class="text-sm font-medium">Introducción</p>
+                        </a>
+                        <a href="#cmd-1"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings_ethernet</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">1.
+                                ipconfig /all</span></a>
+                        <a href="#cmd-2"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">network_check</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">2.
+                                ping</span></a>
+                        <a href="#cmd-3"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">route</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">3.
+                                tracert</span></a>
+                        <a href="#cmd-4"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">cleaning_services</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">4.
+                                ipconfig /flushdns</span></a>
+                        <a href="#cmd-5"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">hub</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">5.
+                                netstat -an</span></a>
+                        <a href="#cmd-6"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dns</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">6.
+                                nslookup</span></a>
+                        <a href="#cmd-7"
+                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"><span
+                                class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">fingerprint</span><span
+                                class="text-sm font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">7.
+                                arp -a</span></a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Article Content -->
+            <article class="flex-1 max-w-[800px] prose-custom">
+                <header class="mb-8">
+                    <h1
+                        class="text-slate-900 dark:text-white tracking-tight text-[32px] md:text-[40px] font-bold leading-tight">
+                        7 Comandos de Red Vitales para todo Ingeniero de Sistemas</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-[#9da6b9] text-sm mt-4">
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">calendar_today</span> 06 Feb 2026</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">schedule</span> 15 min</span>
+                        <span class="flex items-center gap-1.5"><span
+                                class="material-symbols-outlined text-lg">person</span> <span
+                                class="author-name-display" data-author-id="1"></span></span>
+                    </div>
+                    <img src="../img/cmds_sysadmin.jpg" alt="Comandos SysAdmin"
+                        class="w-full h-auto rounded-xl mt-6 border border-slate-200 dark:border-slate-800 shadow-lg">
+                </header>
+
+                <div class="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
+                    <p class="text-lg" id="intro">Dominar la CLI es la diferencia entre adivinar un problema y
+                        solucionarlo. Guía técnica de los comandos esenciales para diagnóstico y administración de
+                        redes.</p>
+
+                    <p>En un mundo dominado por interfaces gráficas y dashboards en la nube, la verdadera potencia de un
+                        Ingeniero de Sistemas sigue residiendo en la terminal. Cuando el servidor no responde, la red se
+                        cae o una aplicación no conecta, no hay GUI que te salve. Necesitas herramientas rápidas,
+                        quirúrgicas y nativas. A continuación, desglosamos los 7 comandos esenciales del stack TCP/IP en
+                        Windows.</p>
+
+                    <h2 id="cmd-1">1. ipconfig /all – Identidad de Red</h2>
+                    <p>No empieces a diagnosticar la red externa sin revisar tu propia casa. <strong>ipconfig
+                            /all</strong> es el primer paso obligatorio. A diferencia del <code>ipconfig</code> simple,
+                        este modificador te muestra la "cédula de identidad" completa del adaptador, incluyendo la
+                        Dirección Física (MAC) y detalles del servidor DHCP.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">ipconfig /all</span></div>
+                            <div class="text-gray-400 break-words">Ethernet adapter Ethernet0:<br> Physical Address. . .
+                                . . . : 00-0C-29-3E-4F-5A<br> IPv4 Address. . . . . . . . : 192.168.1.105(Preferred)<br>
+                                Subnet Mask . . . . . . . . : 255.255.255.0<br> Default Gateway . . . . . . :
+                                192.168.1.1<br> DHCP Server . . . . . . . . : 192.168.1.1<br> DNS Servers . . . . . . .
+                                . : 8.8.8.8</div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-2">2. ping – Verificación de Conectividad</h2>
+                    <p>El sonar básico. Envía paquetes ICMP Echo Request a un destino. Útil para verificar si un host
+                        está vivo y medir la latencia. Recuerda: un "Request timed out" no siempre significa que el
+                        servidor está caído; puede ser un firewall bloqueando ICMP.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">ping google.com</span></div>
+                            <div class="text-gray-400 break-words">Pinging google.com [142.250.64.110] with 32 bytes of
+                                data:<br>Reply from 142.250.64.110: bytes=32 time=14ms TTL=116<br>Reply from
+                                142.250.64.110: bytes=32 time=15ms TTL=116<br><br>Ping statistics for
+                                142.250.64.110:<br> Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)</div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-3">3. tracert – Rastrear Rutas</h2>
+                    <p>Cuando hay lentitud o cortes, <code>ping</code> no te dice dónde. <strong>tracert</strong> (Trace
+                        Route) revela cada salto (router) por el que pasan tus datos hasta el destino. Vital para
+                        detectar cuellos de botella fuera de tu red local.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">tracert google.com</span></div>
+                            <div class="text-gray-400 break-words">Tracing route to google.com [142.250.64.110]<br>over
+                                a maximum of 30 hops:<br><br> 1 <1 ms <1 ms <1 ms 192.168.1.1<br> 2 10 ms 9 ms 12 ms
+                                    isp-gateway.net [203.0.113.1]<br> 3 15 ms 14 ms 15 ms core-router.isp.net<br> 4 * *
+                                    * Request timed out.<br> 5 22 ms 21 ms 22 ms 142.250.64.110<br><br>Trace complete.
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-4">4. ipconfig /flushdns – Limpieza de Caché</h2>
+                    <p>¿Cambiaste un registro DNS pero sigues viendo la web antigua? Windows guarda una caché agresiva
+                        de resoluciones DNS. Usa este comando para purgarla y forzar al sistema a preguntar nuevamente
+                        al servidor DNS.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">ipconfig /flushdns</span></div>
+                            <div class="text-gray-400 break-words">Windows IP Configuration<br><br>Successfully flushed
+                                the DNS Resolver Cache.</div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-5">5. netstat -an – Conexiones Activas</h2>
+                    <p>La herramienta de vigilancia por excelencia. Muestra todos los puertos abiertos y las conexiones
+                        establecidas con hosts remotos. Si sospechas de malware comunicándose con el exterior, aquí lo
+                        encontrarás.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">netstat -an | find "ESTABLISHED"</span></div>
+                            <div class="text-gray-400 break-words">Proto Local Address Foreign Address State<br>TCP
+                                192.168.1.105:54322 104.21.55.2:443 ESTABLISHED<br>TCP 192.168.1.105:54323
+                                142.250.64.110:443 ESTABLISHED<br>TCP 192.168.1.105:3389 192.168.1.50:61200 ESTABLISHED
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-6">6. nslookup – Consultas DNS Manuales</h2>
+                    <p>Cuando el navegador dice "No se puede encontrar la dirección IP", ¿es culpa de tu internet o del
+                        DNS? <strong>nslookup</strong> te permite interrogar directamente a un servidor DNS (como el de
+                        Google 8.8.8.8) para ver cómo resuelve un dominio.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">nslookup google.com</span></div>
+                            <div class="text-gray-400 break-words">Server: dns.google<br>Address:
+                                8.8.8.8<br><br>Non-authoritative answer:<br>Name: google.com<br>Addresses:
+                                2607:f8b0:4006:81a::200e<br> 142.250.64.110</div>
+                        </div>
+                    </div>
+
+                    <h2 id="cmd-7">7. arp -a – Tabla MAC</h2>
+                    <p>En la red local (LAN), las máquinas no hablan por IP, hablan por dirección MAC. El protocolo ARP
+                        traduce IP a MAC. Este comando te muestra quién está realmente conectado a tu segmento de red
+                        local. Crucial para detectar intrusos en el Wi-Fi o conflictos de IP.</p>
+                    <div class="terminal-window text-sm group my-6">
+                        <div class="terminal-header">
+                            <div class="flex gap-1.5">
+                                <div class="dot dot-red"></div>
+                                <div class="dot dot-yellow"></div>
+                                <div class="dot dot-green"></div>
+                            </div>
+                            <div class="mx-auto text-[#9da6b9] text-xs font-medium tracking-tight">cmd</div>
+                        </div>
+                        <div class="p-6 terminal-font leading-relaxed bg-black/90">
+                            <div class="flex gap-2 text-green-400 mb-2"><span>C:\Users\Admin></span><span
+                                    class="text-white">arp -a</span></div>
+                            <div class="text-gray-400 break-words">Interface: 192.168.1.105 --- 0x3<br> Internet Address
+                                Physical Address Type<br> 192.168.1.1 c0-25-e9-2a-b1-c4 dynamic<br> 192.168.1.50
+                                00-11-22-33-44-55 dynamic<br> 192.168.1.255 ff-ff-ff-ff-ff-ff static</div>
+                        </div>
+                    </div>
+
+                    <!-- Author Card (Dynamic) -->
+                    <div id="author-card-container"></div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            renderAuthorCard('1');
+                        });
+                    </script>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <div id="layout-footer"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Layout.init({ basePath: '../' });
+        });
+    </script>
+</body>
+
+</html>
+```
